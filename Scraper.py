@@ -46,9 +46,11 @@ def leerUrl(pagina):
 from selenium import webdriver 
 from webdriver_manager.microsoft import EdgeChromiumDriverManager
   
+CurrentDirectory = os.getcwd()
+
 if __name__ == '__main__': 
     start_time = time.time()
-    edgeBrowser = webdriver.Edge(EdgeChromiumDriverManager().install())
+    edgeBrowser = webdriver.Edge(CurrentDirectory+"//msedgedriver.exe")
     edgeBrowser.get('https://www.linkedin.com/jobs/search/?keywords=Data%20Scientist&location=Chile&locationId=&geoId=104621616&f_TPR=r86400&position=1&pageNum=0') 
     linkedin_soup = bs(edgeBrowser.page_source.encode("utf-8"), "html")
     #print(linkedin_soup)
