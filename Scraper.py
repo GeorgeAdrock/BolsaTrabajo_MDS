@@ -45,14 +45,23 @@ def leerUrl(pagina):
 
 from selenium import webdriver 
 from webdriver_manager.microsoft import EdgeChromiumDriverManager
-  
-CurrentDirectory = os.getcwd()
+from selenium.webdriver.support.select import Select
+from webdriver_manager.chrome import ChromeDriverManager
+
+# Se define la ruta de descarga
+chromeOptions = webdriver.ChromeOptions()
+path = os.path.join(os.getcwd(), "output\\")
+prefs = {"download.default_directory" : path,  "directory_upgrade": True}
+chromeOptions.add_experimental_option("prefs",prefs)
+
 
 if __name__ == '__main__': 
     start_time = time.time()
-    edgeBrowser = webdriver.Edge(CurrentDirectory+"//msedgedriver.exe")
-    edgeBrowser.get('https://www.linkedin.com/jobs/search/?keywords=Data%20Scientist&location=Chile&locationId=&geoId=104621616&f_TPR=r86400&position=1&pageNum=0') 
-    linkedin_soup = bs(edgeBrowser.page_source.encode("utf-8"), "html")
+    #edgeBrowser = webdriver.Edge(CurrentDirectory+"//msedgedriver.exe")
+    driver = webdriver.Chrome(executable_path=ChromeDriverManager().install(), options = chromeOptions)
+
+    driver.get('https://www.linkedin.com/jobs/search/?keywords=Data%20Scientist&location=Chile&locationId=&geoId=104621616&f_TPR=r86400&position=1&pageNum=0') 
+    linkedin_soup = bs(driver.page_source.encode("utf-8"), "html")
     #print(linkedin_soup)
     patron = '/jobs/view/'
     df = ExtraerLink(linkedin_soup('a'),patron)
@@ -83,5 +92,5 @@ if __name__ == '__main__':
     
     dffinal.to_parquet("output/df_"+date.today().strftime("%d%m%Y")+'.parquet', engine='pyarrow')
     print("--- %s seconds ---" % (time.time() - start_time))
-    edgeBrowser.close()
+    driver.close()
 
