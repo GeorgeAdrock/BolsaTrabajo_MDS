@@ -105,7 +105,7 @@ if __name__ == '__main__':
                     ignore_index=True,
                 )
     
-    dffinal.to_parquet("output/df_"+date.today().strftime("%d%m%Y")+'.parquet', engine='pyarrow')
+    dffinal.to_parquet(CurrentDirectory +"df_"+date.today().strftime("%d%m%Y")+'.parquet', engine='pyarrow')
     print("--- %s seconds ---" % (time.time() - start_time))
     driver.close()
 
