@@ -15,6 +15,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.chrome.options import Options
 from bs4 import BeautifulSoup as bs
 
 # Gráficos
@@ -49,16 +50,30 @@ from selenium.webdriver.support.select import Select
 from webdriver_manager.chrome import ChromeDriverManager
 
 # Se define la ruta de descarga
-chromeOptions = webdriver.ChromeOptions()
-path = os.path.join(os.getcwd(), "output\\")
-prefs = {"download.default_directory" : path,  "directory_upgrade": True}
-chromeOptions.add_experimental_option("prefs",prefs)
+#chromeOptions = webdriver.ChromeOptions()
+#path = os.path.join(os.getcwd(), "output\\")
+#prefs = {"download.default_directory" : path,  "directory_upgrade": True}
+#chromeOptions.add_experimental_option("prefs",prefs)
 
+# Creamos carpeta para el Producto Analizado
+CurrentDirectory = os.getcwd()
+#CurrentDirectoryFolder = CurrentDirectory + '\\' + 'output' #PARAMETRO_NOMBRE
+CurrentDirectoryFolder = 'output/' #PARAMETRO_NOMBRE
+# definir ruta_descarga a gusto
+ruta_descarga = CurrentDirectoryFolder 
+options = Options()
+options.add_experimental_option("prefs", {
+  "download.default_directory": ruta_descarga, #Donde descargara
+  "download.prompt_for_download": False,
+  "download.directory_upgrade": True
+})
+
+options.add_argument("--headless")
 
 if __name__ == '__main__': 
     start_time = time.time()
     #edgeBrowser = webdriver.Edge(CurrentDirectory+"//msedgedriver.exe")
-    driver = webdriver.Chrome(executable_path=ChromeDriverManager().install(), options = chromeOptions)
+    driver = webdriver.Chrome(executable_path=ChromeDriverManager().install(),  chrome_options=options)
 
     driver.get('https://www.linkedin.com/jobs/search/?keywords=Data%20Scientist&location=Chile&locationId=&geoId=104621616&f_TPR=r86400&position=1&pageNum=0') 
     linkedin_soup = bs(driver.page_source.encode("utf-8"), "html")
